@@ -5,7 +5,11 @@ public class BinaryTree
 	public BinaryTree()
 	{
 		this.root = null;
+		
 	}
+	
+	
+	
 	
 	public void displayInOrder()
 	{
@@ -14,7 +18,19 @@ public class BinaryTree
 		{
 			System.out.println("Empty Tree");
 		}
+		if(this.root != null)
+		{
+		
+			displayInOrder(root.getLeftNode());   //I want to use recursion, but I keep getting an error under displayInOrder
+			System.out.print(root.getPayload() + " ");
+			displayInOrder(root.getRightNode());
+		}
+
 	}
+	
+	
+	
+	
 	
 	public void displayPostOrder()
 	{
