@@ -4,12 +4,16 @@ public class Node
 	private int payload;
 	private Node leftNode;
 	private Node rightNode;
+	private boolean visited;
+	private Node parentNode;
 	
 	public Node(int payload)
 	{
 		this.payload = payload;
 		this.leftNode = null;
 		this.rightNode = null;
+		this.visited = false;
+		this.parentNode = null;
 	}
 
 	public void addNode(Node n)
@@ -36,6 +40,27 @@ public class Node
 				this.rightNode.addNode(n);
 			}
 		}
+	}
+	
+	public void trueVisited(Node n)
+	{
+		this.visited = true;
+	}
+	
+	public boolean getVisited() {
+		return visited;
+	}
+	
+	public void setVisited(boolean visited) {
+		this.visited = visited;
+	}
+
+	public Node getParentNode() {
+		return parentNode;
+	}
+
+	public void setParentNode(Node parentNode) {
+		this.parentNode = parentNode;
 	}
 	
 	public Node getLeftNode() {
