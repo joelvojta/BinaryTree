@@ -26,44 +26,39 @@ public class BinaryTree
 		}
 		else if(count > 0)
 		{			
-			//if we haven't already displayed this payload
-			if(currNode.getVisited() == false)
+			if(currNode.getVisited() == false) //checks currNode to see if it has been displayed yet
 			{
 				System.out.print(currNode.getPayload() + ", ");
-				//this.root.trueVisited(currNode);
 				currNode.setVisited(true);
 				count--;
 			}		
 			
-			//if we can move down the left side
-			if(currNode.getLeftNode() != null)
+			if(currNode.getLeftNode() != null)//checks to see if there's a node on the left
 			{							
-				currNode = currNode.getLeftNode();					
-				displayInOrder();
+				currNode = currNode.getLeftNode();//change currNode to whatever is on the left				
+				displayInOrder(); //go back and restart the method
 			}		
 			
-			if(currNode.getRightNode() != null)
+			if(currNode.getRightNode() != null)  //checks to see if there's a node on the right
 			{
-				//System.out.println("here");				
-				currNode = currNode.getRightNode();
-				displayInOrder();
+				currNode = currNode.getRightNode(); //change currNode to whatever is on the right
+				displayInOrder(); //restart method
 			}			
 			
-			if(currNode.getLeftNode() == null && currNode.getRightNode() == null) 
+			if(currNode.getLeftNode() == null && currNode.getRightNode() == null) //if the node has no children
 			{		
 				
-				//System.out.print("down here");
-				//System.out.print(currNode.getLeftNode().getPayload() + " -> ");
-				if(currNode.getParentNode().getLeftNode() != null)
+				
+				if(currNode.getParentNode().getLeftNode() != null)  //go up to the node above
 				{
-					currNode.getParentNode().setLeftNode(null);
-					currNode = root;
-					displayInOrder();
+					currNode.getParentNode().setLeftNode(null); //Destroy the node connection,  not what we want to do, but we don't have a good alternative
+					currNode = root; //currNode is now the root
+					displayInOrder(); //restart the method
 				}
 				else
 				{
-					currNode.getParentNode().setRightNode(null);
-					currNode = root;
+					currNode.getParentNode().setRightNode(null); //Destroy the node connection
+					currNode = root;  //currNode is now the root
 					displayInOrder();
 				}
 			}
