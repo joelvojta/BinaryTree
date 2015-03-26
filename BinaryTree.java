@@ -77,32 +77,32 @@ public class BinaryTree
 		}
 		else if(count > 1)
 		{
-			if(currNode.getLeftNode() != null)
+			if(currNode.getLeftNode() != null) //is there a node on the left?
 			{							
-				currNode = currNode.getLeftNode();					
-				displayPostOrder();				
+				currNode = currNode.getLeftNode();//set it to currNode					
+				displayPostOrder();			//start over	
 			}
-			if(currNode.getVisited() == false)
+			if(currNode.getVisited() == false)  //if the node hasn't been visited
 			{
-				System.out.print(currNode.getPayload() + ", ");
-				currNode.setVisited(true);
+				System.out.print(currNode.getPayload() + ", ");  //print it out
+				currNode.setVisited(true);  //set it to visited
 				count--;			
 			}
 			else 
 			{
-				if(currNode.getRightNode() == null)
+				if(currNode.getRightNode() == null)  //if there is no right node
 				{
-					if(currNode.getParentNode().getLeftNode() != null)
+					if(currNode.getParentNode().getLeftNode() != null) //if the parent has a left node
 					{
-						currNode.getParentNode().setLeftNode(null);
+						currNode.getParentNode().setLeftNode(null); //set it to null, destroying the connection
+						currNode = root;   
+					}
+					else 
+					{
+						currNode.getParentNode().setRightNode(null); //destroy the connection
 						currNode = root;
 					}
-					else
-					{
-						currNode.getParentNode().setRightNode(null);
-						currNode = root;
-					}
-					displayPostOrder();
+					displayPostOrder(); //start over
 				}
 				else
 				{
