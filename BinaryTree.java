@@ -1,14 +1,20 @@
 public class BinaryTree 
 {
 	private Node root;
+	private Node currNode;
+	public int count;
 	
 	public BinaryTree()
 	{
 		this.root = null;
-		
+		this.currNode = null;
+		this.count = 0;
 	}
 	
-	
+	public void count()
+	{
+		System.out.println("Count is: " + count);
+	}
 	
 	
 	public void displayInOrder()
@@ -18,14 +24,52 @@ public class BinaryTree
 		{
 			System.out.println("Empty Tree");
 		}
-		if(this.root != null)
-		{
-		
-			displayInOrder(root.getLeftNode());   //I want to use recursion, but I keep getting an error under displayInOrder
-			System.out.print(root.getPayload() + " ");
-			displayInOrder(root.getRightNode());
+		else if(count > 0)
+		{			
+			//if we haven't already displayed this payload
+			if(currNode.getVisited() == false)
+			{
+				System.out.print(currNode.getPayload() + ", ");
+				//this.root.trueVisited(currNode);
+				currNode.setVisited(true);
+				count--;
+			}		
+			
+			//if we can move down the left side
+			if(currNode.getLeftNode() != null)
+			{							
+				currNode = currNode.getLeftNode();					
+				displayInOrder();
+			}		
+			
+			if(currNode.getRightNode() != null)
+			{
+				//System.out.println("here");				
+				currNode = currNode.getRightNode();
+				displayInOrder();
+			}			
+			
+			if(currNode.getLeftNode() == null && currNode.getRightNode() == null) 
+			{		
+				
+				//System.out.print("down here");
+				//System.out.print(currNode.getLeftNode().getPayload() + " -> ");
+				if(currNode.getParentNode().getLeftNode() != null)
+				{
+					currNode.getParentNode().setLeftNode(null);
+					currNode = root;
+					displayInOrder();
+				}
+				else
+				{
+					currNode.getParentNode().setRightNode(null);
+					currNode = root;
+					displayInOrder();
+				}
+			}
+			
+			
 		}
-
 	}
 	
 	
