@@ -68,15 +68,48 @@ public class BinaryTree
 	}
 	
 	
-	
-	
-	
 	public void displayPostOrder()
 	{
 		System.out.println("**** Post Order ****");
 		if(this.root == null)
 		{
 			System.out.println("Empty Tree");
+		}
+		else if(count > 1)
+		{
+			if(currNode.getLeftNode() != null)
+			{							
+				currNode = currNode.getLeftNode();					
+				displayPostOrder();				
+			}
+			if(currNode.getVisited() == false)
+			{
+				System.out.print(currNode.getPayload() + ", ");
+				currNode.setVisited(true);
+				count--;			
+			}
+			else 
+			{
+				if(currNode.getRightNode() == null)
+				{
+					if(currNode.getParentNode().getLeftNode() != null)
+					{
+						currNode.getParentNode().setLeftNode(null);
+						currNode = root;
+					}
+					else
+					{
+						currNode.getParentNode().setRightNode(null);
+						currNode = root;
+					}
+					displayPostOrder();
+				}
+				else
+				{
+					currNode = currNode.getRightNode();
+					displayPostOrder();
+				}
+			}			
 		}
 	}
 	
