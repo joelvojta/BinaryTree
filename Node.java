@@ -23,6 +23,7 @@ public class Node
 			if(this.leftNode == null)
 			{
 				this.leftNode = n;
+				n.parent = this;
 			}
 			else
 			{
@@ -34,6 +35,7 @@ public class Node
 			if(this.rightNode == null)
 			{
 				this.rightNode = n;
+				n.parent = this;
 			}
 			else
 			{
