@@ -1,21 +1,55 @@
-
 public class Node 
 {
 	private int payload;
 	private Node leftNode;
 	private Node rightNode;
-	private boolean visited;
-	private Node parentNode;
 	
 	public Node(int payload)
 	{
 		this.payload = payload;
 		this.leftNode = null;
 		this.rightNode = null;
-		this.visited = false;
-		this.parentNode = null;
 	}
 
+	public void visitInOrder()
+	{
+		if(this.leftNode != null)
+		{
+			this.leftNode.visitInOrder();
+		}
+		System.out.println(this.payload);
+		if(this.rightNode != null)
+		{
+			this.rightNode.visitInOrder();
+		}
+	}
+	
+	public void visitPreOrder()
+	{
+		System.out.println(this.payload);
+		if(this.leftNode != null)
+		{
+			this.leftNode.visitPreOrder();
+		}
+		if(this.rightNode != null)
+		{
+			this.rightNode.visitPreOrder();
+		}
+	}
+	
+	public void visitPostOrder()
+	{
+		if(this.leftNode != null)
+		{
+			this.leftNode.visitPostOrder();
+		}
+		if(this.rightNode != null)
+		{
+			this.rightNode.visitPostOrder();
+		}
+		System.out.println(this.payload);
+		
+	}
 	public void addNode(Node n)
 	{
 		if(n.getPayload() <= this.payload)
@@ -23,7 +57,6 @@ public class Node
 			if(this.leftNode == null)
 			{
 				this.leftNode = n;
-				n.parent = this;
 			}
 			else
 			{
@@ -35,34 +68,12 @@ public class Node
 			if(this.rightNode == null)
 			{
 				this.rightNode = n;
-				n.parent = this;
 			}
 			else
 			{
 				this.rightNode.addNode(n);
 			}
 		}
-	}
-	
-	public void trueVisited(Node n)
-	{
-		this.visited = true;
-	}
-	
-	public boolean getVisited() {
-		return visited;
-	}
-	
-	public void setVisited(boolean visited) {
-		this.visited = visited;
-	}
-
-	public Node getParentNode() {
-		return parentNode;
-	}
-
-	public void setParentNode(Node parentNode) {
-		this.parentNode = parentNode;
 	}
 	
 	public Node getLeftNode() {
