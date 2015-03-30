@@ -1,128 +1,164 @@
 public class BinaryTree 
 {
-	private Node root;
-	private Node currNode;
-	public int count;
+	//private Node root;
+	private boolean isEmpty;
+	private int payload;
+	private BinaryTree leftTree;
+	private BinaryTree rightTree;
+	
 	
 	public BinaryTree()
 	{
-		this.root = null;
-		this.currNode = null;
-		this.count = 0;
+		this.isEmpty = true;
+		this.leftTree = null;
+		this.rightTree = null;
 	}
 	
-	public void count()
+	public boolean search(int value)
 	{
-		System.out.println("Count is: " + count);
+		if(this.isEmpty)  //if this tree is empty
+		{
+			System.out.println("Value " + value + " not found.  Empty Tree."); //return false
+			return false;
+		}
+		else
+		{
+			if(this.payload == value) //if the payload equals the value
+			{
+				System.out.println("Value " + value + " found.");  //return true
+				return true;
+			}
+			else if(this.payload > value) //if the payload is greater than the incoming value
+			{
+				if(this.leftTree == null)  //check to the left
+				{
+					System.out.println("Value " + value + " not found.");  //if nothing is there, return false
+					return false;
+				}
+				else  //if something is there, start the search over again
+				{
+				return this.leftTree.search(value);	
+				}
+			}
+			else if(this.payload < value) //if the payload is less than the incoming value
+			{
+				if(this.rightTree == null) //check to the right
+				{
+					System.out.println("Value " + value + " not found."); //if nothing is there, return false
+					return false;
+				}
+				else  //if something is there, restart your search
+				{
+					return this.rightTree.search(value);	
+				}
+			}
+		}
+		return false;
 	}
 	
-	
+	private void visitInOrder()
+	{
+		if(this.leftTree != null)
+		{
+			this.leftTree.visitInOrder();
+		}
+		System.out.println(this.payload);
+		if(this.rightTree != null)
+		{
+			this.rightTree.visitInOrder();
+		}
+	}
+
 	public void displayInOrder()
 	{
 		System.out.println("**** In Order ****");
-		if(this.root == null)
+		if(this.isEmpty)
 		{
 			System.out.println("Empty Tree");
 		}
-		else if(count > 0)
-		{			
-			if(currNode.getVisited() == false) //checks currNode to see if it has been displayed yet
-			{
-				System.out.print(currNode.getPayload() + ", ");
-				currNode.setVisited(true);
-				count--;
-			}		
-			
-			if(currNode.getLeftNode() != null)//checks to see if there's a node on the left
-			{							
-				currNode = currNode.getLeftNode();//change currNode to whatever is on the left				
-				displayInOrder(); //go back and restart the method
-			}		
-			
-			if(currNode.getRightNode() != null)  //checks to see if there's a node on the right
-			{
-				currNode = currNode.getRightNode(); //change currNode to whatever is on the right
-				displayInOrder(); //restart method
-			}			
-			
-			if(currNode.getLeftNode() == null && currNode.getRightNode() == null) //if the node has no children
-			{		
-				
-				
-				if(currNode.getParentNode().getLeftNode() != null)  //go up to the node above
-				{
-					currNode.getParentNode().setLeftNode(null); //Destroy the node connection,  not what we want to do, but we don't have a good alternative
-					currNode = root; //currNode is now the root
-					displayInOrder(); //restart the method
-				}
-				else
-				{
-					currNode.getParentNode().setRightNode(null); //Destroy the node connection
-					currNode = root;  //currNode is now the root
-					displayInOrder();
-				}
-			}
-			
-			
+		else
+		{
+			this.visitInOrder();
 		}
 	}
 	
+	private void visitPreOrder()
+	{
+		System.out.println(this.payload);
+		if(this.leftTree != null)
+		{
+			this.leftTree.visitPreOrder();
+		}
+		if(this.rightTree != null)
+		{
+			this.rightTree.visitPreOrder();
+		}
+	}
+	
+	public void displayPreOrder()
+	{
+		System.out.println("**** Pre Order ****");
+		if(this.isEmpty)
+		{
+			System.out.println("Empty Tree");
+		}
+		else
+		{
+			this.visitPreOrder();
+		}
+	}
+	
+	private void visitPostOrder()
+	{
+		if(this.leftTree != null)
+		{
+			this.leftTree.visitPostOrder();
+		}
+		if(this.rightTree != null)
+		{
+			this.rightTree.visitPostOrder();
+		}
+		System.out.println(this.payload);
+	}
 	
 	public void displayPostOrder()
 	{
 		System.out.println("**** Post Order ****");
-		if(this.root == null)
+		if(this.isEmpty)
 		{
 			System.out.println("Empty Tree");
 		}
-		else if(count > 1)
+		else
 		{
-			if(currNode.getLeftNode() != null) //is there a node on the left?
-			{							
-				currNode = currNode.getLeftNode();//set it to currNode					
-				displayPostOrder();			//start over	
-			}
-			if(currNode.getVisited() == false)  //if the node hasn't been visited
-			{
-				System.out.print(currNode.getPayload() + ", ");  //print it out
-				currNode.setVisited(true);  //set it to visited
-				count--;			
-			}
-			else 
-			{
-				if(currNode.getRightNode() == null)  //if there is no right node
-				{
-					if(currNode.getParentNode().getLeftNode() != null) //if the parent has a left node
-					{
-						currNode.getParentNode().setLeftNode(null); //set it to null, destroying the connection
-						currNode = root;   
-					}
-					else 
-					{
-						currNode.getParentNode().setRightNode(null); //destroy the connection
-						currNode = root;
-					}
-					displayPostOrder(); //start over
-				}
-				else
-				{
-					currNode = currNode.getRightNode();
-					displayPostOrder();
-				}
-			}			
+			this.visitPostOrder();
 		}
 	}
 	
 	public void add(int value)
 	{
-		Node theNode = new Node(value);
-		if(this.root == null)
+		if(this.isEmpty)
 		{
-			this.root = theNode;
+			this.payload = value;
+			this.isEmpty = false;
 		}
 		else
 		{
-			this.root.addNode(theNode);
+			if(value <= this.payload)
+			{
+				if(this.leftTree == null)
+				{
+					this.leftTree = new BinaryTree();	
+				}
+				this.leftTree.add(value);
+			}
+			else
+			{
+				if(this.rightTree == null)
+				{
+					this.rightTree = new BinaryTree();
+				}
+				this.rightTree.add(value);
+			}
 		}
 	}
 }
