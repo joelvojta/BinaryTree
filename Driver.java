@@ -5,7 +5,7 @@ public class Driver
 	public static void main(String[] args) 
 	{
 		Random r = new Random();
-		BinaryTree bt = new BinaryTree();
+		BinaryTree bt = new BinaryTree();  
 		for(int i = 0; i < 5000; i++)
 		{
 			bt.add(r.nextInt());
@@ -13,3 +13,5 @@ public class Driver
 		System.out.print(bt.isBalanced());
 	}
 }
+
+
