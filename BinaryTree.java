@@ -5,55 +5,65 @@ public class BinaryTree
 	private int payload;
 	private BinaryTree leftTree;
 	private BinaryTree rightTree;
+	private int depth;
 	
+	public int differ; //what's the difference between two trees
 	
 	public BinaryTree()
+	{
+		this(0);
+	}
+	
+	private BinaryTree(int depth)
 	{
 		this.isEmpty = true;
 		this.leftTree = null;
 		this.rightTree = null;
+		this.depth = depth;
 	}
 	
 	public boolean search(int value)
 	{
-		if(this.isEmpty)  //if this tree is empty
+		//return true if value is in the tree
+		//return false if value is not in the tree
+		if(this.isEmpty)
 		{
-			System.out.println("Value " + value + " not found.  Empty Tree."); //return false
 			return false;
 		}
 		else
 		{
-			if(this.payload == value) //if the payload equals the value
+			if(this.payload == value)
 			{
-				System.out.println("Value " + value + " found.");  //return true
 				return true;
 			}
-			else if(this.payload > value) //if the payload is greater than the incoming value
+			else
 			{
-				if(this.leftTree == null)  //check to the left
+				if(value < payload)
 				{
-					System.out.println("Value " + value + " not found.");  //if nothing is there, return false
-					return false;
+					//check the left
+					if(this.leftTree == null)
+					{
+						return false;
+					}
+					else
+					{
+						return this.leftTree.search(value);
+					}
 				}
-				else  //if something is there, start the search over again
+				else
 				{
-				return this.leftTree.search(value);	
-				}
-			}
-			else if(this.payload < value) //if the payload is less than the incoming value
-			{
-				if(this.rightTree == null) //check to the right
-				{
-					System.out.println("Value " + value + " not found."); //if nothing is there, return false
-					return false;
-				}
-				else  //if something is there, restart your search
-				{
-					return this.rightTree.search(value);	
+					//check the right
+					if(this.rightTree == null)
+					{
+						return false;
+					}
+					else
+					{
+						return this.rightTree.search(value);
+					}
 				}
 			}
 		}
-		return false;
 	}
 	
 	private void visitInOrder()
@@ -62,7 +72,7 @@ public class BinaryTree
 		{
 			this.leftTree.visitInOrder();
 		}
-		System.out.println(this.payload);
+		System.out.println(this.payload + " : " + this.depth);
 		if(this.rightTree != null)
 		{
 			this.rightTree.visitInOrder();
@@ -134,6 +144,53 @@ public class BinaryTree
 		}
 	}
 	
+	private int getMaxDepth()
+	{
+		if(this.leftTree == null && this.rightTree == null)
+		{
+			return this.depth;
+		}
+		else if(this.leftTree == null)
+		{
+			return this.rightTree.getMaxDepth();
+		}
+		else if(this.rightTree == null)
+		{
+			return this.leftTree.getMaxDepth();
+		}
+		else
+		{
+			return Math.max(this.leftTree.getMaxDepth(), this.rightTree.getMaxDepth());
+		}
+	}
+	
+	public boolean isBalanced()
+	{
+		if(this.isEmpty)
+		{
+			return true;
+		}
+		else
+		{
+			//boolean-expr?true-val:false-val
+			int currMaxLeftDepth = this.leftTree == null?0:this.leftTree.getMaxDepth();
+			int currMaxRightDepth = this.rightTree == null?0:this.rightTree.getMaxDepth();
+			System.out.println("Max Left = " + currMaxLeftDepth);
+			System.out.println("Max Right = " + currMaxRightDepth);
+			return Math.abs(currMaxLeftDepth - currMaxRightDepth) <= 1;
+		}
+	}
+
+	
+	public int findDiffer()   //finds difference between two trees
+	{
+		int currMaxLeftDepth = this.leftTree == null?0:this.leftTree.getMaxDepth();
+		int currMaxRightDepth = this.rightTree == null?0:this.rightTree.getMaxDepth();
+		differ = currMaxLeftDepth - currMaxRightDepth;
+		return differ;
+	}
+	
+
 	public void add(int value)
 	{
 		if(this.isEmpty)
@@ -143,22 +200,87 @@ public class BinaryTree
 		}
 		else
 		{
-			if(value <= this.payload)
+			if(value < this.payload) //add to left
 			{
 				if(this.leftTree == null)
 				{
-					this.leftTree = new BinaryTree();	
-				}
+					this.leftTree = new BinaryTree(this.depth+1);	
+				
 				this.leftTree.add(value);
+				
+				if(this.findDiffer() > 1)// finds difference
+				{
+					if ( value < this.leftTree.payload) 
+					{
+	                    this.leftTree = rotateLeft(this);
+	                } 
+					else 
+					{
+	                    this.leftTree = doubleLeft(this);
+	                }
+					}
+				}
 			}
-			else
+			
+			else if(value > this.payload)  					 //add to right
 			{
 				if(this.rightTree == null)
 				{
-					this.rightTree = new BinaryTree();
-				}
+				this.rightTree = new BinaryTree(this.depth+1);
 				this.rightTree.add(value);
+				
+				if(this.findDiffer() < 1)// finds difference
+				{
+					this.leftTree = rotateRight(this);
+				}
+				else
+				{
+					this.leftTree = doubleRight(this);
+				}
+				
+				}
+			}
+			else
+			{
+		         this.depth = Math.max(this.leftTree.getMaxDepth(), this.rightTree.getMaxDepth()) + 1; 
+		         
 			}
 		}
 	}
+	
+	public BinaryTree rotateLeft(BinaryTree n) 
+	{
+		BinaryTree r = n.rightTree;  //make a copy of n's rightTree
+        n.rightTree = r.leftTree;  //n's rightTree is now r's leftTree
+        r.leftTree = n;
+        n.depth = Math.max(n.leftTree.getMaxDepth(), n.rightTree.getMaxDepth()) + 1;  //which one is bigger
+	    r.depth = Math.max(r.leftTree.getMaxDepth(), r.rightTree.getMaxDepth()) + 1;
+	    return r;
+	}
+	
+	
+	private BinaryTree rotateRight(BinaryTree n) 
+	{
+	     BinaryTree r = n.leftTree;
+	     n.leftTree = r.rightTree;
+	     r.rightTree = n;
+	     n.depth = Math.max(n.leftTree.getMaxDepth(), n.rightTree.getMaxDepth()) + 1;
+	     r.depth = Math.max(r.leftTree.getMaxDepth(), r.rightTree.getMaxDepth()) + 1;
+	     return r;
+	}
+	
+	private BinaryTree doubleLeft(BinaryTree k3)
+    {
+        k3.leftTree = rotateRight( k3.leftTree );
+        return rotateLeft( k3 );
+    }
+	
+	private BinaryTree doubleRight(BinaryTree k1)
+    {
+        k1.rightTree = rotateLeft( k1.rightTree );
+        return rotateRight( k1 );
+    } 
+	
+	
 }
+
